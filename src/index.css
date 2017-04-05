@@ -1,0 +1,15 @@
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  margin: 0;
+  background-color: #eee;
+  overflow: hidden;
+}
+
+
+canvas {
+  display: block;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  width: 100%;
+}

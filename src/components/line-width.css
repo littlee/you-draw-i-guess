@@ -1,0 +1,7 @@
+.line-width {
+  margin: 15px;
+}
+
+.line-width-item + .line-width-item {
+  margin-left: 15px;
+}
