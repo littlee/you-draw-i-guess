@@ -15,10 +15,7 @@ class App extends Component {
     this.context = this.refs.c.getContext('2d')
     this._resetCanvas()
 
-    var ws = new WebSocket('ws://0.0.0.0:8080')
-    ws.onopen = function(e) {
-      console.log(e)
-    }
+    this.ws = new WebSocket('ws://192.168.0.101:8080')
   }
 
   render() {
