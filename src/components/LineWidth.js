@@ -1,29 +1,58 @@
 import React from 'react'
 import './line-width.css'
+import clickOutside from '../hoc/clickOutside'
 
 class LineWidth extends React.Component {
+  state = {
+    width: 2,
+    show: false
+  }
+
   render() {
     return (<div className="line-width">
-      <label className="line-width-item">
-        <input type="radio" name="lineWidth" onChange={this._onChange} value="1" defaultChecked/>1
-      </label>
-      <label className="line-width-item">
-        <input type="radio" name="lineWidth" onChange={this._onChange} value="5" />5
-      </label>
-      <label className="line-width-item">
-        <input type="radio" name="lineWidth" onChange={this._onChange} value="10"/>10
-      </label>
-      <label className="line-width-item">
-        <input type="radio" name="lineWidth" onChange={this._onChange} value="15"/>15
-      </label>
-      <label className="line-width-item">
-        <input type="radio" name="lineWidth" onChange={this._onChange} value="20"/>20
-      </label>
+      <div className="line-width-selected" onClick={this._toggleMenu}>
+        <span className="line-width-current" style={{
+          width: this.state.width,
+          height: this.state.width
+        }}></span>
+      </div>
+      {
+        this.state.show ?
+        <div className="line-width-options">
+          <div className="line-width-option" onClick={this._change.bind(this, 2)}>
+            <span style={{ width: 2, height: 2}}></span>
+          </div>
+          <div className="line-width-option" onClick={this._change.bind(this, 5)}>
+            <span style={{ width: 5, height: 5}}></span>
+          </div>
+          <div className="line-width-option" onClick={this._change.bind(this, 10)}>
+            <span style={{ width: 10, height: 10}}></span>
+          </div>
+          <div className="line-width-option" onClick={this._change.bind(this, 15)}>
+            <span style={{ width: 15, height: 15}}></span>
+          </div>
+          <div className="line-width-option" onClick={this._change.bind(this, 20)}>
+            <span style={{ width: 20, height: 20}}></span>
+          </div>
+        </div> : null
+      }
     </div>)
   }
 
-  _onChange = (e) => {
-    this.props.onChange && this.props.onChange(e.target.value)
+  _toggleMenu = (e) => {
+    e.stopPropagation()
+    this.setState({
+      show: !this.state.show
+    })
+  }
+
+  _change = (value, e) => {
+    e.stopPropagation()
+    this.setState({
+      show: false,
+      width: value
+    })
+    this.props.onChange && this.props.onChange(value)
   }
 }
 

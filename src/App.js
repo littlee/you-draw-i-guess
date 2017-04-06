@@ -1,16 +1,24 @@
 import React, { Component } from 'react'
 import LineWidth from './components/LineWidth'
+import StrokeStyle from './components/StrokeStyle'
+import Clear from './components/Clear'
 
 class App extends Component {
   state = {
     width: 200,
     height: 200,
-    lineWidth: 2
+    lineWidth: 2,
+    color: '#000'
   }
 
   componentDidMount() {
     this.context = this.refs.c.getContext('2d')
     this._resetCanvas()
+
+    var ws = new WebSocket('ws://0.0.0.0:8080')
+    ws.onopen = function(e) {
+      console.log(e)
+    }
   }
 
   render() {
@@ -25,9 +33,10 @@ class App extends Component {
           onTouchMove={this._touchMove}
           onTouchEnd={this._touchEnd}
           ></canvas>
-        <button onClick={this._clearCanvas}>clear</button>
 
         <LineWidth onChange={this._changeLineWidth}/>
+        <StrokeStyle onChange={this._changeColor}/>
+        <Clear onClear={this._clearCanvas}/>
       </div>
     );
   }
@@ -51,6 +60,12 @@ class App extends Component {
     })
   }
 
+  _changeColor = (value) => {
+    this.setState({
+      color: value
+    })
+  }
+
   _getDrawPosition = (touch) => {
     return {
       x: (touch.pageX - touch.target.offsetLeft )* 2,
@@ -60,10 +75,13 @@ class App extends Component {
 
 
   _touchStart = (e) => {
-    e.preventDefault()
+    if (e.cancelable && !e.defaultPrevented) {
+      e.preventDefault()
+    }
     var p = this._getDrawPosition(e.touches[0])
     this.context.lineCap = 'round'
     this.context.lineWidth = this.state.lineWidth
+    this.context.strokeStyle = this.state.color
     this.context.beginPath()
     this.context.moveTo(p.x - 1, p.y)
     this.context.lineTo(p.x, p.y)
@@ -71,14 +89,15 @@ class App extends Component {
   }
 
   _touchMove = (e) => {
-    e.preventDefault()
+    if (e.cancelable && !e.defaultPrevented) {
+      e.preventDefault()
+    }
     var p = this._getDrawPosition(e.touches[0])
     this.context.lineTo(p.x, p.y)
     this.context.stroke()
   }
 
   _touchEnd = (e) => {
-    e.preventDefault()
     this.context.closePath()
   }
 }
